@@ -9,7 +9,7 @@ Bu proje, modern web teknolojilerini **LangChain** frameworkü ile güçlendiril
 * **💬 Akıllı AI Asistanı:** Ziyaretçilerin sorularını (örn: "Mehmet hangi teknolojileri biliyor?", "Backend tecrübesi var mı?") anlık olarak cevaplar.
 * **🔗 LangChain Framework:** Endüstri standardı LangChain frameworkü ile modüler ve genişletilebilir RAG pipeline.
 * **🧠 Gelişmiş RAG Mimarisi:** Veriler **LanceDB** (Embedded Vector DB) üzerinde tutulur. JSON tabanlı sistemlere göre çok daha hızlı ve ölçeklenebilirdir.
-* **⚡ Sınırsız & Ücretsiz Embedding:** Vektör oluşturmak için harici bir API (OpenAI/Google) kullanılmaz. `@huggingface/transformers` ile tamamen lokalde çalışır.
+* **⚡ HuggingFace Inference API:** Vektör oluşturmak için `@huggingface/inference` kullanılır. HuggingFace API ile güçlü embedding modelleri kullanılır.
 * **🔗 Çoklu Veri Kaynağı:** Sadece `cv.pdf` dosyasını değil, aynı zamanda **GitHub Repolarını** da otomatik çekip analiz eder.
 * **🛡️ Vercel Serverless Uyumlu:** Disk tabanlı veritabanı yapısı sayesinde Vercel'in RAM limitlerine takılmadan yüksek performansla çalışır.
 * **🎨 Modern UI/UX:** `Framer Motion` animasyonları, Glassmorphism tasarımı ve Responsive yapı.
@@ -33,8 +33,8 @@ Sistem, LangChain'in doküman yükleme ve işleme araçlarını kullanarak `src/
   - Her parça metadata ile zenginleştirilir (sayfa numarası, kaynak, tip, yazar bilgisi)
   
 * **Embedding Oluşturma:** 
-  - **HuggingFaceTransformersEmbeddings:** `Xenova/all-MiniLM-L6-v2` modeli ile metinler 384 boyutlu vektörlere dönüştürülür
-  - Tamamen lokal çalışır, harici API gerektirmez
+  - **HuggingFaceInferenceEmbeddings:** `sentence-transformers/all-MiniLM-L6-v2` modeli ile metinler 384 boyutlu vektörlere dönüştürülür
+  - HuggingFace Inference API kullanılır, API key gerektirir
   
 * **Vektör Depolama:** 
   - **LanceDB VectorStore:** LangChain'in LanceDB entegrasyonu ile vektörler disk tabanlı `.lancedb` klasörüne kaydedilir
@@ -73,8 +73,8 @@ LangChain'in **Chain** mimarisi ile oluşturulan cevap üretim sistemi:
     * `@langchain/core` (Temel yapılar: Runnables, Prompts, Parsers)
 * **Veritabanı (Vector DB):** LanceDB 0.23 (Embedded & Serverless)
 * **Embeddings:** 
-    * `@huggingface/transformers` 3.8 (Lokal embedding modeli)
-    * Model: `Xenova/all-MiniLM-L6-v2`
+    * `@huggingface/inference` 4.13 (HuggingFace Inference API)
+    * Model: `sentence-transformers/all-MiniLM-L6-v2`
 * **Document Processing:**
     * `pdf-parse` (PDF okuma)
     * `pdf2json` (PDF işleme)
@@ -103,6 +103,7 @@ Projeyi yerel ortamınızda çalıştırmak için adımları izleyin:
     Ana dizinde `.env` dosyası oluşturun ve gerekli API anahtarlarını ekleyin:
     ```env
     DEEPSEEK_API_KEY=sk-senin-api-anahtarin
+    HUGGINGFACE_API_KEY=hf_senin-api-anahtarin
     GITHUB_USERNAME=github-kullanici-adin
     GITHUB_TOKEN=github-token (opsiyonel, rate limit için önerilir)
     ```
@@ -118,7 +119,7 @@ Projeyi yerel ortamınızda çalıştırmak için adımları izleyin:
     **İlk Başlatma:** Sistem otomatik olarak:
     - PDF'i yükler ve parçalara ayırır
     - GitHub projelerini çeker
-    - Embedding modelini indirir (ilk seferde ~50MB)
+    - HuggingFace Inference API ile embeddingler oluşturur
     - Vektör veritabanını oluşturur
     
     *Terminalde "✅ Sunucu Başlangıç Kontrolleri Tamamlandı!" mesajını gördüğünüzde işlem tamamdır.*
@@ -287,15 +288,14 @@ const allDocs = [...pdfDocs, ...githubDocs, ...webDocs, ...mdDocs];
 
 ## 🐛 Sorun Giderme
 
-### Embedding Modeli İndirilemiyor
+### HuggingFace API Hatası
 
-İlk çalıştırmada model otomatik indirilir (~50MB). İnternet bağlantınızı kontrol edin.
+API anahtarınızı kontrol edin ve geçerli bir HuggingFace API key kullandığınızdan emin olun.
 
 **Çözüm:**
 ```bash
-# Cache'i temizle
-rm -rf node_modules/.cache/
-npm run dev
+# .env dosyasında
+HUGGINGFACE_API_KEY=hf_...  # HuggingFace'den alınan API key
 ```
 
 ### LanceDB Veritabanı Bozuldu
@@ -337,6 +337,7 @@ module.exports = {
 
 2. **Environment Variables:** Vercel Dashboard'da ekleyin:
    - `DEEPSEEK_API_KEY`
+   - `HUGGINGFACE_API_KEY`
    - `GITHUB_USERNAME`
    - `GITHUB_TOKEN` (opsiyonel)
 
@@ -347,7 +348,7 @@ module.exports = {
 
 4. **İlk Deploy Sonrası:**
    - `.lancedb` klasörü otomatik oluşur
-   - Cold start ~5-10 saniye sürebilir (embedding modeli yükleme)
+   - Cold start ~3-5 saniye sürebilir (HuggingFace API bağlantısı)
    - Sonraki istekler çok daha hızlı olacaktır
 
 ---
@@ -385,11 +386,18 @@ Pull request'ler memnuniyetle karşılanır! Büyük değişiklikler için önce
 
 ## 📝 Değişiklik Geçmişi
 
+### v2.1.0 - HuggingFace Inference API 🚀
+- ⚡ `@huggingface/transformers` yerine `@huggingface/inference` kullanımı
+- 🔄 `HuggingFaceTransformersEmbeddings` yerine `HuggingFaceInferenceEmbeddings`
+- 🎯 Model güncelleme: `sentence-transformers/all-MiniLM-L6-v2`
+- 🧹 Next.js config optimizasyonu (gereksiz externals kaldırıldı)
+- 📦 Daha küçük bundle boyutu ve daha hızlı deployment
+
 ### v2.0.0 - LangChain Migration 🎉
 - ✨ Tamamen LangChain framework'üne geçiş
 - ✨ Modüler RAG pipeline (RunnableSequence)
 - ✨ LangChain PDFLoader ve RecursiveCharacterTextSplitter
-- ✨ HuggingFaceTransformersEmbeddings entegrasyonu
+- ✨ HuggingFace embeddings entegrasyonu
 - ✨ Gelişmiş metadata yönetimi
 - ✨ Daha kolay model değiştirme (ChatOpenAI interface)
 
