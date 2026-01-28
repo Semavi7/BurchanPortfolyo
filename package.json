@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@huggingface/transformers": "^3.8.1",
+    "@huggingface/inference": "^4.13.10",
     "@lancedb/lancedb": "^0.23.0",
     "@langchain/community": "^1.1.7",
     "@langchain/core": "^1.1.17",
