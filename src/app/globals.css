@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular;
+
+  --color-background: #050505;
+  --color-foreground: #fafafa;
+
+  --color-primary: #10b981;
+  /* Emerald */
+  --color-secondary: #3b82f6;
+  /* Blue */
+  --color-muted: #737373;
+  --color-accent: #f59e0b;
+  /* Amber */
+
+  --color-card: #0a0a0a;
+  --color-border: #1a1a1a;
+
+  --radius-lg: 0px;
+  /* Industrial sharp edges */
+  --radius-md: 0px;
+  --radius-sm: 0px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans selection:bg-primary/30;
+    transition: background-color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-linear-to-r from-primary to-secondary;
+  }
+
+  .border-gradient {
+    border-image: linear-gradient(to right, var(--color-primary), var(--color-secondary)) 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border hover:bg-muted;
+}
