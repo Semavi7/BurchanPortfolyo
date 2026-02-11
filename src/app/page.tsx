@@ -6,6 +6,7 @@ import { Timeline } from "@/components/Timeline";
 import { Certifications } from "@/components/Certifications";
 import { Footer } from "@/components/Footer";
 import { MachineLearning } from "@/components/MachineLearning";
+import { Algorithms } from "@/components/Algorithms";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Hero />
       <Projects />
       <MachineLearning />
+      <Algorithms />
       <Skills />
       <Timeline />
       <Certifications />
