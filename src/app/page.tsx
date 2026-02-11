@@ -7,6 +7,8 @@ import { Certifications } from "@/components/Certifications";
 import { Footer } from "@/components/Footer";
 import { MachineLearning } from "@/components/MachineLearning";
 import { Algorithms } from "@/components/Algorithms";
+import { GoLang } from "@/components/GoLang";
+import { RustLang } from "@/components/RustLang";
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
       <Projects />
       <MachineLearning />
       <Algorithms />
+      <GoLang />
+      <RustLang />
       <Skills />
       <Timeline />
       <Certifications />
