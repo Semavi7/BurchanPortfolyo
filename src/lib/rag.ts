@@ -2,19 +2,19 @@ import path from "path";
 import fs from "fs";
 import * as lancedb from "@lancedb/lancedb";
 import { LanceDB } from "@langchain/community/vectorstores/lancedb";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { fetchGithubRepos } from "./github";
 import { Document as LCDocument } from "@langchain/core/documents";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 
 const LANCE_DB_PATH = path.join(process.cwd(), ".lancedb");
 
 export async function getVectorStore() {
   
-  const embeddings = new HuggingFaceInferenceEmbeddings({
-    apiKey: process.env.HUGGINGFACE_API_KEY, 
-    model: "sentence-transformers/all-MiniLM-L6-v2", 
+  const embeddings = new GoogleGenerativeAIEmbeddings({
+    model: "gemini-embedding-001", 
+    apiKey: process.env.GOOGLE_API_KEY
   });
 
   const db = await lancedb.connect(LANCE_DB_PATH);

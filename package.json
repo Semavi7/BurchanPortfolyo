@@ -9,10 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@huggingface/inference": "^4.13.10",
     "@lancedb/lancedb": "^0.23.0",
     "@langchain/community": "^1.1.7",
     "@langchain/core": "^1.1.17",
+    "@langchain/google-genai": "^2.1.17",
     "@langchain/openai": "^1.2.3",
     "apache-arrow": "^18.1.0",
     "chart.js": "^4.5.1",

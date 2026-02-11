@@ -9,7 +9,7 @@ Bu proje, modern web teknolojilerini **LangChain** frameworkü ile güçlendiril
 * **💬 Akıllı AI Asistanı:** Ziyaretçilerin sorularını (örn: "Mehmet hangi teknolojileri biliyor?", "Backend tecrübesi var mı?") anlık olarak cevaplar.
 * **🔗 LangChain Framework:** Endüstri standardı LangChain frameworkü ile modüler ve genişletilebilir RAG pipeline.
 * **🧠 Gelişmiş RAG Mimarisi:** Veriler **LanceDB** (Embedded Vector DB) üzerinde tutulur. JSON tabanlı sistemlere göre çok daha hızlı ve ölçeklenebilirdir.
-* **⚡ HuggingFace Inference API:** Vektör oluşturmak için `@huggingface/inference` kullanılır. HuggingFace API ile güçlü embedding modelleri kullanılır.
+* **⚡ Google AI Embeddings:** Vektör oluşturmak için `@langchain/google-genai` kullanılır. Google'ın güçlü `gemini-embedding-001` modeli ile metinler vektörlere dönüştürülür.
 * **🔗 Çoklu Veri Kaynağı:** Sadece `cv.pdf` dosyasını değil, aynı zamanda **GitHub Repolarını** da otomatik çekip analiz eder.
 * **🛡️ Vercel Serverless Uyumlu:** Disk tabanlı veritabanı yapısı sayesinde Vercel'in RAM limitlerine takılmadan yüksek performansla çalışır.
 * **🎨 Modern UI/UX:** `Framer Motion` animasyonları, Glassmorphism tasarımı ve Responsive yapı.
@@ -33,8 +33,9 @@ Sistem, LangChain'in doküman yükleme ve işleme araçlarını kullanarak `src/
   - Her parça metadata ile zenginleştirilir (sayfa numarası, kaynak, tip, yazar bilgisi)
   
 * **Embedding Oluşturma:** 
-  - **HuggingFaceInferenceEmbeddings:** `sentence-transformers/all-MiniLM-L6-v2` modeli ile metinler 384 boyutlu vektörlere dönüştürülür
-  - HuggingFace Inference API kullanılır, API key gerektirir
+  - **GoogleGenerativeAIEmbeddings:** `gemini-embedding-001` modeli ile metinler yüksek kaliteli vektörlere dönüştürülür
+  - Google AI API kullanılır, GOOGLE_API_KEY gerektirir
+  - LangChain'in `@langchain/google-genai` paketi ile entegre edilir
   
 * **Vektör Depolama:** 
   - **LanceDB VectorStore:** LangChain'in LanceDB entegrasyonu ile vektörler disk tabanlı `.lancedb` klasörüne kaydedilir
@@ -73,8 +74,9 @@ LangChain'in **Chain** mimarisi ile oluşturulan cevap üretim sistemi:
     * `@langchain/core` (Temel yapılar: Runnables, Prompts, Parsers)
 * **Veritabanı (Vector DB):** LanceDB 0.23 (Embedded & Serverless)
 * **Embeddings:** 
-    * `@huggingface/inference` 4.13 (HuggingFace Inference API)
-    * Model: `sentence-transformers/all-MiniLM-L6-v2`
+    * `@langchain/google-genai` 2.1+ (Google AI embeddings)
+    * Model: `gemini-embedding-001`
+    * Yüksek kaliteli ve hızlı vektör oluşturma
 * **Document Processing:**
     * `pdf-parse` (PDF okuma)
     * `pdf2json` (PDF işleme)
@@ -103,7 +105,7 @@ Projeyi yerel ortamınızda çalıştırmak için adımları izleyin:
     Ana dizinde `.env` dosyası oluşturun ve gerekli API anahtarlarını ekleyin:
     ```env
     DEEPSEEK_API_KEY=sk-senin-api-anahtarin
-    HUGGINGFACE_API_KEY=hf_senin-api-anahtarin
+    GOOGLE_API_KEY=AIzaSy...-senin-google-api-anahtarin
     GITHUB_USERNAME=github-kullanici-adin
     GITHUB_TOKEN=github-token (opsiyonel, rate limit için önerilir)
     ```
@@ -119,7 +121,7 @@ Projeyi yerel ortamınızda çalıştırmak için adımları izleyin:
     **İlk Başlatma:** Sistem otomatik olarak:
     - PDF'i yükler ve parçalara ayırır
     - GitHub projelerini çeker
-    - HuggingFace Inference API ile embeddingler oluşturur
+    - Google AI API ile gelişmiş embeddingler oluşturur
     - Vektör veritabanını oluşturur
     
     *Terminalde "✅ Sunucu Başlangıç Kontrolleri Tamamlandı!" mesajını gördüğünüzde işlem tamamdır.*
@@ -288,14 +290,15 @@ const allDocs = [...pdfDocs, ...githubDocs, ...webDocs, ...mdDocs];
 
 ## 🐛 Sorun Giderme
 
-### HuggingFace API Hatası
+### Google AI API Hatası
 
-API anahtarınızı kontrol edin ve geçerli bir HuggingFace API key kullandığınızdan emin olun.
+API anahtarınızı kontrol edin ve geçerli bir Google API key kullandığınızdan emin olun.
 
 **Çözüm:**
 ```bash
 # .env dosyasında
-HUGGINGFACE_API_KEY=hf_...  # HuggingFace'den alınan API key
+GOOGLE_API_KEY=AIzaSy...  # Google AI Studio'dan alınan API key
+# API key almak için: https://aistudio.google.com/app/apikey
 ```
 
 ### LanceDB Veritabanı Bozuldu
@@ -337,7 +340,7 @@ module.exports = {
 
 2. **Environment Variables:** Vercel Dashboard'da ekleyin:
    - `DEEPSEEK_API_KEY`
-   - `HUGGINGFACE_API_KEY`
+   - `GOOGLE_API_KEY`
    - `GITHUB_USERNAME`
    - `GITHUB_TOKEN` (opsiyonel)
 
@@ -348,7 +351,7 @@ module.exports = {
 
 4. **İlk Deploy Sonrası:**
    - `.lancedb` klasörü otomatik oluşur
-   - Cold start ~3-5 saniye sürebilir (HuggingFace API bağlantısı)
+   - Cold start ~2-4 saniye sürebilir (Google AI API bağlantısı)
    - Sonraki istekler çok daha hızlı olacaktır
 
 ---
@@ -385,6 +388,14 @@ Pull request'ler memnuniyetle karşılanır! Büyük değişiklikler için önce
 ---
 
 ## 📝 Değişiklik Geçmişi
+
+### v2.2.0 - Google AI Embeddings Geçişi 🚀
+- ⚡ HuggingFace yerine Google AI embeddings kullanımı
+- 🔄 `GoogleGenerativeAIEmbeddings` ile `gemini-embedding-001` modeli entegrasyonu
+- 🎯 Daha yüksek kaliteli vektör oluşturma
+- 📊 Gelişmiş metadata yapısı (id, type, page, source, author, category)
+- 🧹 Temiz ve düzenli doküman işleme
+- 🚀 Daha hızlı ve güvenilir embedding API'sı
 
 ### v2.1.0 - HuggingFace Inference API 🚀
 - ⚡ `@huggingface/transformers` yerine `@huggingface/inference` kullanımı
