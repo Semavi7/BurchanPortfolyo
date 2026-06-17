@@ -1,15 +1,20 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { personalData } from "@/lib/data"
+import { personalDataTr, personalDataEn } from "@/lib/data"
 import { Code2, Landmark, Globe } from "lucide-react"
+import { useLanguage } from "@/i18n/LanguageContext"
+import { ui } from "@/i18n/ui"
 
 export const Skills = () => {
+    const { lang } = useLanguage()
+    const data = lang === "tr" ? personalDataTr : personalDataEn
+
     return (
         <section id="skills" className="py-24 border-b border-border">
             <div className="container mx-auto px-4">
                 <h2 className="text-4xl font-black uppercase tracking-tighter mb-16 border-l-4 border-primary pl-6">
-                    Teknik Yetkinlikler
+                    {ui.technicalSkills[lang]}
                 </h2>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -17,10 +22,10 @@ export const Skills = () => {
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-3 mb-8">
                             <Code2 className="text-primary" />
-                            <h3 className="font-mono text-sm uppercase tracking-[0.2em] font-bold">Yazılım Geliştirme</h3>
+                            <h3 className="font-mono text-sm uppercase tracking-[0.2em] font-bold">{ui.softwareDev[lang]}</h3>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            {personalData.skills.software.map((skill, index) => (
+                            {data.skills.software.map((skill, index) => (
                                 <motion.div
                                     key={skill}
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -41,10 +46,10 @@ export const Skills = () => {
                         <div>
                             <div className="flex items-center gap-3 mb-8">
                                 <Landmark className="text-secondary" />
-                                <h3 className="font-mono text-sm uppercase tracking-[0.2em] font-bold">Muhasebe & Finans</h3>
+                                <h3 className="font-mono text-sm uppercase tracking-[0.2em] font-bold">{ui.accountingFinance[lang]}</h3>
                             </div>
                             <div className="space-y-3">
-                                {personalData.skills.accounting.map((skill) => (
+                                {data.skills.accounting.map((skill) => (
                                     <div key={skill} className="flex items-center justify-between p-3 border border-border bg-card">
                                         <span className="font-mono text-xs">{skill}</span>
                                         <div className="flex gap-1">
@@ -61,22 +66,22 @@ export const Skills = () => {
                         <div>
                             <div className="flex items-center gap-3 mb-8">
                                 <Globe className="text-accent" />
-                                <h3 className="font-mono text-sm uppercase tracking-[0.2em] font-bold">Diller</h3>
+                                <h3 className="font-mono text-sm uppercase tracking-[0.2em] font-bold">{ui.languages[lang]}</h3>
                             </div>
                             <div className="space-y-4">
-                                {personalData.skills.languages.map((lang) => (
-                                    <div key={lang.name}>
+                                {data.skills.languages.map((item, index) => (
+                                    <div key={item.name}>
                                         <div className="flex justify-between items-end mb-2">
-                                            <span className="font-bold uppercase text-xs tracking-wider">{lang.name}</span>
-                                            <span className="font-mono text-[10px] text-muted">{lang.level}</span>
+                                            <span className="font-bold uppercase text-xs tracking-wider">{item.name}</span>
+                                            <span className="font-mono text-[10px] text-muted">{item.level}</span>
                                         </div>
                                         <div className="h-1.5 w-full bg-border relative overflow-hidden">
                                             <motion.div
                                                 initial={{ width: 0 }}
-                                                whileInView={{ width: `${(lang.stars / 5) * 100}%` }}
+                                                whileInView={{ width: `${(item.stars / 5) * 100}%` }}
                                                 viewport={{ once: true }}
                                                 transition={{ duration: 1, delay: 0.5 }}
-                                                className={`h-full ${lang.name === 'Türkçe' ? "bg-primary" : "bg-accent"}`}
+                                                className={`h-full ${index === 0 ? "bg-primary" : "bg-accent"}`}
                                             />
                                         </div>
                                     </div>

@@ -2,9 +2,14 @@
 
 import { motion } from "framer-motion"
 import { Github, Linkedin, Mail, Phone } from "lucide-react"
-import { personalData } from "@/lib/data"
+import { personalDataTr, personalDataEn } from "@/lib/data"
+import { useLanguage } from "@/i18n/LanguageContext"
+import { LanguageToggle } from "./LanguageToggle"
 
 export const Header = () => {
+    const { lang } = useLanguage()
+    const personalData = lang === "tr" ? personalDataTr : personalDataEn
+
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -34,6 +39,8 @@ export const Header = () => {
                     <a href={`https://github.com/${personalData.contact.github}`} target="_blank" className="text-muted hover:text-primary transition-colors">
                         <Github size={18} />
                     </a>
+                    <div className="h-4 w-px bg-border mx-2" />
+                    <LanguageToggle />
                     <div className="h-4 w-px bg-border mx-2" />
                     <span className="font-mono text-xs text-primary animate-pulse">SYSTEM_ONLINE</span>
                 </nav>

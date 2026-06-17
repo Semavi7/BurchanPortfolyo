@@ -2,25 +2,29 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { algoDict, type AlgoDict } from "@/i18n/algorithms";
 
 // --- YARDIMCI FONKSİYONLAR ---
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function AlgorithmsPage() {
     const [activeSection, setActiveSection] = useState<"intro" | "complexity" | "structures" | "algorithms" | "review">("intro");
+    const { lang } = useLanguage();
+    const dict = algoDict[lang];
 
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground font-sans selection:bg-primary/30">
-            <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <main className="grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* NAVIGASYON */}
                 <nav className="mb-12 border-b border-white/10 pb-4 overflow-x-auto">
                     <div className="flex space-x-2 min-w-max">
                         {[
-                            { id: "intro", label: "Giriş" },
-                            { id: "complexity", label: "Karmaşıklık (Big O)" },
-                            { id: "structures", label: "Veri Yapıları" },
-                            { id: "algorithms", label: "Algoritmalar" },
-                            { id: "review", label: "Özet & Sorular" },
+                            { id: "intro", label: dict.tabIntro },
+                            { id: "complexity", label: dict.tabComplexity },
+                            { id: "structures", label: dict.tabStructures },
+                            { id: "algorithms", label: dict.tabAlgorithms },
+                            { id: "review", label: dict.tabReview },
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -38,11 +42,11 @@ export default function AlgorithmsPage() {
 
                 {/* İÇERİK ALANI */}
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    {activeSection === "intro" && <IntroSection changeSection={setActiveSection} />}
-                    {activeSection === "complexity" && <ComplexitySection />}
-                    {activeSection === "structures" && <DataStructuresSection />}
-                    {activeSection === "algorithms" && <AlgorithmsSection />}
-                    {activeSection === "review" && <ReviewSection />}
+                    {activeSection === "intro" && <IntroSection changeSection={setActiveSection} dict={dict} />}
+                    {activeSection === "complexity" && <ComplexitySection dict={dict} />}
+                    {activeSection === "structures" && <DataStructuresSection dict={dict} />}
+                    {activeSection === "algorithms" && <AlgorithmsSection dict={dict} />}
+                    {activeSection === "review" && <ReviewSection dict={dict} />}
                 </div>
             </main>
         </div>
@@ -50,7 +54,7 @@ export default function AlgorithmsPage() {
 }
 
 // --- BÖLÜM 1: GİRİŞ ---
-function IntroSection({ changeSection }: { changeSection: (s: any) => void }) {
+function IntroSection({ changeSection, dict }: { changeSection: (s: any) => void; dict: AlgoDict }) {
     return (
         <div className="space-y-8">
             <div className="text-center py-16 bg-white/5 border border-white/10 backdrop-blur-sm p-8 relative overflow-hidden">
@@ -59,36 +63,40 @@ function IntroSection({ changeSection }: { changeSection: (s: any) => void }) {
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/10 rounded-full blur-3xl -z-10"></div>
 
                 <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                        Algoritma ve Veri Yapıları
+                    <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
+                        {dict.introHeading}
                     </span>
                 </h1>
                 <p className="text-xl text-muted max-w-2xl mx-auto mb-8 font-light">
-                    Yazılımın temeli sadece kod yazmak değil, veriyi <strong className="text-foreground">nasıl organize ettiğimiz</strong> ve problemleri <strong className="text-foreground">ne kadar verimli</strong> çözdüğümüzdür.
+                    {dict.introDescPart1}
+                    <strong className="text-foreground">{dict.introDescStrong1}</strong>
+                    {dict.introDescPart2}
+                    <strong className="text-foreground">{dict.introDescStrong2}</strong>
+                    {dict.introDescPart3}
                 </p>
                 <button
                     onClick={() => changeSection("complexity")}
                     className="px-8 py-3 bg-primary text-background font-bold text-lg hover:bg-emerald-400 transition-colors shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                 >
-                    Başlayalım &rarr;
+                    {dict.introCta} &rarr;
                 </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
                     {
-                        title: "Performans Analizi",
-                        desc: "Kodunuzun hızı veri boyutu arttıkça nasıl değişiyor? Big O notasyonunu keşfedin.",
+                        title: dict.introCard1Title,
+                        desc: dict.introCard1Desc,
                         color: "border-secondary"
                     },
                     {
-                        title: "Veri Organizasyonu",
-                        desc: "Veriyi hafızada nasıl tutmalı? Stack (Yığın) ve Queue (Kuyruk) yapılarını inceleyin.",
+                        title: dict.introCard2Title,
+                        desc: dict.introCard2Desc,
                         color: "border-primary"
                     },
                     {
-                        title: "Arama Stratejileri",
-                        desc: "Samanlıkta iğne aramak: Linear Search vs Binary Search yarışı.",
+                        title: dict.introCard3Title,
+                        desc: dict.introCard3Desc,
                         color: "border-accent"
                     },
                 ].map((item, i) => (
@@ -103,7 +111,7 @@ function IntroSection({ changeSection }: { changeSection: (s: any) => void }) {
 }
 
 // --- BÖLÜM 2: COMPLEXITY (BIG O) ---
-function ComplexitySection() {
+function ComplexitySection({ dict }: { dict: AlgoDict }) {
     const [n, setN] = useState(10);
     const chartRef = useRef<HTMLCanvasElement>(null);
     const chartInstance = useRef<Chart | null>(null);
@@ -133,7 +141,7 @@ function ComplexitySection() {
                     labels: labels,
                     datasets: [
                         {
-                            label: "O(1) - Sabit",
+                            label: dict.chartSeriesO1,
                             data: dataO1,
                             borderColor: "#3b82f6",
                             borderWidth: 2,
@@ -141,7 +149,7 @@ function ComplexitySection() {
                             tension: 0.4,
                         },
                         {
-                            label: "O(n) - Doğrusal",
+                            label: dict.chartSeriesOn,
                             data: dataOn,
                             borderColor: "#ef4444",
                             borderWidth: 2,
@@ -160,12 +168,12 @@ function ComplexitySection() {
                         y: {
                             grid: { color: "#333" },
                             ticks: { color: "#737373" },
-                            title: { display: true, text: "İşlem Sayısı", color: "#a3a3a3" },
+                            title: { display: true, text: dict.chartYAxis, color: "#a3a3a3" },
                         },
                         x: {
                             grid: { color: "#333" },
                             ticks: { color: "#737373" },
-                            title: { display: true, text: "Girdi Boyutu (n)", color: "#a3a3a3" },
+                            title: { display: true, text: dict.chartXAxis, color: "#a3a3a3" },
                         },
                     },
                 },
@@ -177,22 +185,25 @@ function ComplexitySection() {
                 chartInstance.current.destroy();
             }
         };
-    }, []);
+    }, [dict]);
 
     return (
         <div className="space-y-8">
             <div className="bg-card border border-white/10 p-6">
-                <h2 className="text-2xl font-bold text-foreground mb-4 border-b border-white/10 pb-2">Zaman Karmaşıklığı (Time Complexity)</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4 border-b border-white/10 pb-2">{dict.complexityHeading}</h2>
                 <p className="text-muted mb-6 leading-relaxed">
-                    Bir algoritmanın verimliliğini ölçerken "saniye" değil, "işlem sayısı" konuşulur. Aşağıdaki simülasyonda veri boyutunu (n) artırarak
-                    <strong className="text-blue-400"> Sabit Zaman O(1)</strong> ile <strong className="text-red-400"> Doğrusal Zaman O(n)</strong> arasındaki uçurumu görebilirsiniz.
+                    {dict.complexityDescPart1}
+                    <strong className="text-blue-400"> {dict.complexityDescStrong1}</strong>
+                    {dict.complexityDescPart2}
+                    <strong className="text-red-400"> {dict.complexityDescStrong2}</strong>
+                    {dict.complexityDescPart3}
                 </p>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                     <div className="bg-white/5 p-6 border border-white/10 space-y-6">
                         <div>
                             <label className="block text-sm font-mono text-muted mb-2">
-                                Girdi Boyutu (n): <span className="text-primary font-bold">{n}</span>
+                                {dict.complexityInputLabel} <span className="text-primary font-bold">{n}</span>
                             </label>
                             <input
                                 type="range"
@@ -207,33 +218,33 @@ function ComplexitySection() {
 
                         <div className="space-y-4">
                             <div className="p-4 bg-blue-500/10 border border-blue-500/20">
-                                <h4 className="font-bold text-blue-400 text-sm mb-1 font-mono">O(1) - Sabit Zaman</h4>
-                                <p className="text-xs text-muted mb-2">Veri ne kadar artarsa artsın, işlem sayısı değişmez. (Örn: Dizinin 1. elemanına bakmak).</p>
-                                <div className="text-xl font-mono font-bold text-blue-500">1 İşlem</div>
+                                <h4 className="font-bold text-blue-400 text-sm mb-1 font-mono">{dict.complexityO1Title}</h4>
+                                <p className="text-xs text-muted mb-2">{dict.complexityO1Desc}</p>
+                                <div className="text-xl font-mono font-bold text-blue-500">{dict.complexityO1Ops}</div>
                             </div>
                             <div className="p-4 bg-red-500/10 border border-red-500/20">
-                                <h4 className="font-bold text-red-400 text-sm mb-1 font-mono">O(n) - Doğrusal Zaman</h4>
-                                <p className="text-xs text-muted mb-2">Veri miktarı ile işlem sayısı birebir artar. (Örn: Tüm listeyi okumak).</p>
-                                <div className="text-xl font-mono font-bold text-red-500">{n} İşlem</div>
+                                <h4 className="font-bold text-red-400 text-sm mb-1 font-mono">{dict.complexityOnTitle}</h4>
+                                <p className="text-xs text-muted mb-2">{dict.complexityOnDesc}</p>
+                                <div className="text-xl font-mono font-bold text-red-500">{dict.complexityOnOps(n)}</div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="lg:col-span-2 h-[400px] bg-card border border-white/10 p-4 flex flex-col items-center">
+                    <div className="lg:col-span-2 h-100 bg-card border border-white/10 p-4 flex flex-col items-center">
                         <canvas ref={chartRef} />
-                        <p className="text-xs text-muted mt-2 text-center">Grafik, girdi boyutu (X ekseni) ile işlem sayısı (Y ekseni) arasındaki ilişkiyi gösterir.</p>
+                        <p className="text-xs text-muted mt-2 text-center">{dict.chartCaption}</p>
                     </div>
                 </div>
             </div>
 
             <div className="bg-amber-500/10 border-l-4 border-amber-500 p-4">
                 <div className="flex">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                         <span className="text-2xl">💡</span>
                     </div>
                     <div className="ml-3">
                         <p className="text-sm text-amber-200/80">
-                            <strong>Hatırlatma:</strong> O(n²) (iç içe döngüler) burada gösterilmemiştir ancak n=100 olduğunda 10,000 işlem gerektirirdi. Bu yüzden Big Data'da tercih edilmez.
+                            <strong>{dict.complexityReminderStrong}</strong>{dict.complexityReminderText}
                         </p>
                     </div>
                 </div>
@@ -243,7 +254,7 @@ function ComplexitySection() {
 }
 
 // --- BÖLÜM 3: VERİ YAPILARI (STACK/QUEUE) ---
-function DataStructuresSection() {
+function DataStructuresSection({ dict }: { dict: AlgoDict }) {
   const [stack, setStack] = useState<number[]>([]);
   const [queue, setQueue] = useState<number[]>([]);
   const nextId = useRef(1);
@@ -268,50 +279,50 @@ function DataStructuresSection() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      
+
       {/* YENİ EKLENEN KARTLAR: TEMEL VERİ YAPILARI */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        
+
         {/* Arrays */}
-        <div className="bg-card p-6 border-l-2 border-primary border-y border-r border-white/10 hover:bg-white/5 transition-all duration-300 group">
+        <div className="bg-card p-6 border-l-2 border-y border-r border-white/10 border-l-primary hover:bg-white/5 transition-all duration-300 group">
           <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">🔢</div>
-          <h3 className="text-lg font-bold text-foreground font-mono">Diziler (Arrays)</h3>
-          <p className="text-sm text-muted mt-2 mb-4">Bellekte yan yana duran veri bloklarıdır.</p>
+          <h3 className="text-lg font-bold text-foreground font-mono">{dict.dsArraysTitle}</h3>
+          <p className="text-sm text-muted mt-2 mb-4">{dict.dsArraysDesc}</p>
           <ul className="text-sm space-y-2 mb-4 font-mono">
-            <li className="flex justify-between items-center"><span className="text-primary font-bold">Erişim:</span> <span className="text-xs bg-primary/10 text-primary px-2 py-1">O(1) Hızlı</span></li>
-            <li className="flex justify-between items-center"><span className="text-red-400 font-bold">Ekleme:</span> <span className="text-xs bg-red-400/10 text-red-400 px-2 py-1">O(n) Yavaş</span></li>
+            <li className="flex justify-between items-center"><span className="text-primary font-bold">{dict.dsAccessLabel}</span> <span className="text-xs bg-primary/10 text-primary px-2 py-1">{dict.dsFastLabel}</span></li>
+            <li className="flex justify-between items-center"><span className="text-red-400 font-bold">{dict.dsInsertionLabel}</span> <span className="text-xs bg-red-400/10 text-red-400 px-2 py-1">{dict.dsSlowLabel}</span></li>
           </ul>
         </div>
 
         {/* Linked Lists */}
-        <div className="bg-card p-6 border-l-2 border-secondary border-y border-r border-white/10 hover:bg-white/5 transition-all duration-300 group">
+        <div className="bg-card p-6 border-l-2 border-y border-r border-white/10 border-l-secondary hover:bg-white/5 transition-all duration-300 group">
           <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">🔗</div>
-          <h3 className="text-lg font-bold text-foreground font-mono">Bağlı Listeler</h3>
-          <p className="text-sm text-muted mt-2 mb-4">Tren vagonları gibi, her eleman bir sonrakini işaret eder.</p>
+          <h3 className="text-lg font-bold text-foreground font-mono">{dict.dsLinkedListsTitle}</h3>
+          <p className="text-sm text-muted mt-2 mb-4">{dict.dsLinkedListsDesc}</p>
           <ul className="text-sm space-y-2 mb-4 font-mono">
-            <li className="flex justify-between items-center"><span className="text-red-400 font-bold">Erişim:</span> <span className="text-xs bg-red-400/10 text-red-400 px-2 py-1">O(n) Yavaş</span></li>
-            <li className="flex justify-between items-center"><span className="text-primary font-bold">Ekleme:</span> <span className="text-xs bg-primary/10 text-primary px-2 py-1">O(1) Hızlı</span></li>
+            <li className="flex justify-between items-center"><span className="text-red-400 font-bold">{dict.dsAccessLabel}</span> <span className="text-xs bg-red-400/10 text-red-400 px-2 py-1">{dict.dsSlowLabel}</span></li>
+            <li className="flex justify-between items-center"><span className="text-primary font-bold">{dict.dsInsertionLabel}</span> <span className="text-xs bg-primary/10 text-primary px-2 py-1">{dict.dsFastLabel}</span></li>
           </ul>
         </div>
 
         {/* Hash Maps */}
-        <div className="bg-card p-6 border-l-2 border-amber-500 border-y border-r border-white/10 hover:bg-white/5 transition-all duration-300 group">
+        <div className="bg-card p-6 border-l-2 border-y border-r border-white/10 border-l-amber-500 hover:bg-white/5 transition-all duration-300 group">
           <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">🔑</div>
-          <h3 className="text-lg font-bold text-foreground font-mono">Hash Tabloları</h3>
-          <p className="text-sm text-muted mt-2 mb-4">Anahtar-Değer eşleşmesi. Veri aramanın en hızlı yoludur.</p>
+          <h3 className="text-lg font-bold text-foreground font-mono">{dict.dsHashTablesTitle}</h3>
+          <p className="text-sm text-muted mt-2 mb-4">{dict.dsHashTablesDesc}</p>
           <ul className="text-sm space-y-2 mb-4 font-mono">
-            <li className="flex justify-between items-center"><span className="text-primary font-bold">Arama:</span> <span className="text-xs bg-primary/10 text-primary px-2 py-1">O(1) Hızlı</span></li>
-            <li className="text-xs text-muted mt-1 italic opacity-70">Örn: Kullanıcı ID → Profil</li>
+            <li className="flex justify-between items-center"><span className="text-primary font-bold">{dict.dsSearchLabel}</span> <span className="text-xs bg-primary/10 text-primary px-2 py-1">{dict.dsFastLabel}</span></li>
+            <li className="text-xs text-muted mt-1 italic opacity-70">{dict.dsHashExample}</li>
           </ul>
         </div>
 
         {/* Trees & Graphs */}
-        <div className="bg-card p-6 border-l-2 border-purple-500 border-y border-r border-white/10 hover:bg-white/5 transition-all duration-300 group">
+        <div className="bg-card p-6 border-l-2 border-y border-r border-white/10 border-l-purple-500 hover:bg-white/5 transition-all duration-300 group">
           <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">🌳</div>
-          <h3 className="text-lg font-bold text-foreground font-mono">Ağaçlar & Grafikler</h3>
-          <p className="text-sm text-muted mt-2 mb-4">Hiyerarşik (Klasör yapısı) veya ilişkisel (Sosyal ağlar) veriler.</p>
+          <h3 className="text-lg font-bold text-foreground font-mono">{dict.dsTreesTitle}</h3>
+          <p className="text-sm text-muted mt-2 mb-4">{dict.dsTreesDesc}</p>
           <div className="text-xs bg-white/5 border border-white/10 p-2 text-muted font-mono">
-            <strong className="text-purple-400">BST:</strong> Sol taraf küçük, sağ taraf büyük.
+            <strong className="text-purple-400">{dict.dsBstNote}</strong>
           </div>
         </div>
 
@@ -320,23 +331,23 @@ function DataStructuresSection() {
       {/* MEVCUT SİMÜLASYON ALANI (Stack & Queue) */}
       <div className="bg-card border border-white/10 p-6 space-y-8">
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-2 border-b border-white/10 pb-2">Veri Yapıları: Hafıza Organizasyonu</h2>
-          <p className="text-muted">Verilerin nasıl saklandığı, onlara nasıl erişeceğimizi belirler. Stack ve Queue en temel iki disiplindir.</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2 border-b border-white/10 pb-2">{dict.dsSimHeading}</h2>
+          <p className="text-muted">{dict.dsSimDesc}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* STACK */}
           <div className="flex flex-col">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xl font-bold text-primary font-mono">Stack (Yığın)</h3>
-              <span className="px-2 py-1 bg-primary/20 text-primary text-xs font-bold font-mono">LIFO: Son Giren İlk Çıkar</span>
+              <h3 className="text-xl font-bold text-primary font-mono">{dict.dsStackTitle}</h3>
+              <span className="px-2 py-1 bg-primary/20 text-primary text-xs font-bold font-mono">{dict.dsStackLifo}</span>
             </div>
-            <div className="bg-primary/10 p-4 mb-4 text-sm text-primary/80 min-h-[60px] border border-primary/20">
-              "Tarayıcıdaki <strong>Geri</strong> butonu veya üst üste dizilen tabaklar gibidir."
+            <div className="bg-primary/10 p-4 mb-4 text-sm text-primary/80 min-h-15 border border-primary/20">
+              {dict.dsStackDescPart1}<strong>{dict.dsStackDescStrong}</strong>{dict.dsStackDescPart2}
             </div>
 
             {/* Görsel Alan */}
-            <div className="flex-grow flex flex-col-reverse items-center bg-white/5 border border-white/10 h-64 p-4 relative overflow-hidden mb-4 shadow-inner">
+            <div className="grow flex flex-col-reverse items-center bg-white/5 border border-white/10 h-64 p-4 relative overflow-hidden mb-4 shadow-inner">
               <div className="absolute bottom-0 w-full border-b-4 border-primary/50"></div>
               {stack.map((item) => (
                 <div key={item} className="w-3/4 h-10 mb-1 bg-primary text-background flex items-center justify-center font-bold shadow-lg animate-in slide-in-from-top-4 duration-300">
@@ -346,34 +357,34 @@ function DataStructuresSection() {
             </div>
 
             <div className="flex gap-2 justify-center">
-              <button onClick={pushStack} className="flex-1 bg-primary hover:bg-emerald-600 text-background font-bold py-2 transition hover:scale-105 active:scale-95">Ekle (Push)</button>
-              <button onClick={popStack} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 transition hover:scale-105 active:scale-95">Çıkar (Pop)</button>
+              <button onClick={pushStack} className="flex-1 bg-primary hover:bg-emerald-600 text-background font-bold py-2 transition hover:scale-105 active:scale-95">{dict.dsStackPush}</button>
+              <button onClick={popStack} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 transition hover:scale-105 active:scale-95">{dict.dsStackPop}</button>
             </div>
           </div>
 
           {/* QUEUE */}
           <div className="flex flex-col">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xl font-bold text-secondary font-mono">Queue (Kuyruk)</h3>
-              <span className="px-2 py-1 bg-secondary/20 text-secondary text-xs font-bold font-mono">FIFO: İlk Giren İlk Çıkar</span>
+              <h3 className="text-xl font-bold text-secondary font-mono">{dict.dsQueueTitle}</h3>
+              <span className="px-2 py-1 bg-secondary/20 text-secondary text-xs font-bold font-mono">{dict.dsQueueFifo}</span>
             </div>
-            <div className="bg-secondary/10 p-4 mb-4 text-sm text-secondary/80 min-h-[60px] border border-secondary/20">
-              "Market kasasındaki sıra veya yazıcıya gönderilen belgeler gibidir."
+            <div className="bg-secondary/10 p-4 mb-4 text-sm text-secondary/80 min-h-15 border border-secondary/20">
+              {dict.dsQueueDesc}
             </div>
 
             {/* Görsel Alan */}
-            <div className="flex-grow flex items-center bg-white/5 border border-white/10 h-64 p-4 relative overflow-hidden mb-4 overflow-x-auto shadow-inner">
+            <div className="grow flex items-center bg-white/5 border border-white/10 h-64 p-4 relative overflow-hidden mb-4 overflow-x-auto shadow-inner">
               <div className="absolute left-0 h-full border-l-4 border-secondary/50"></div>
               {queue.map((item) => (
-                <div key={item} className="h-3/4 min-w-[3rem] w-12 mr-1 bg-secondary text-white flex items-center justify-center font-bold shadow-lg animate-in slide-in-from-right-4 duration-300">
+                <div key={item} className="h-3/4 min-w-12 w-12 mr-1 bg-secondary text-white flex items-center justify-center font-bold shadow-lg animate-in slide-in-from-right-4 duration-300">
                   {item}
                 </div>
               ))}
             </div>
 
             <div className="flex gap-2 justify-center">
-              <button onClick={enqueue} className="flex-1 bg-secondary hover:bg-blue-600 text-white font-bold py-2 transition hover:scale-105 active:scale-95">Ekle (Enqueue)</button>
-              <button onClick={dequeue} className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 transition hover:scale-105 active:scale-95">Çıkar (Dequeue)</button>
+              <button onClick={enqueue} className="flex-1 bg-secondary hover:bg-blue-600 text-white font-bold py-2 transition hover:scale-105 active:scale-95">{dict.dsQueueEnqueue}</button>
+              <button onClick={dequeue} className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 transition hover:scale-105 active:scale-95">{dict.dsQueueDequeue}</button>
             </div>
           </div>
         </div>
@@ -385,13 +396,13 @@ function DataStructuresSection() {
 // --- BÖLÜM 4: ALGORİTMALAR (SEARCH) ---
 type BoxStatus = 'default' | 'check' | 'found' | 'eliminated';
 
-function AlgorithmsSection() {
+function AlgorithmsSection({ dict }: { dict: AlgoDict }) {
     const dataSet = Array.from({ length: 20 }, (_, i) => i + 1);
     const [target, setTarget] = useState(17);
     const [boxStatuses, setBoxStatuses] = useState<BoxStatus[]>(Array(20).fill('default'));
 
-    const [linearStats, setLinearStats] = useState({ steps: 0, status: 'Hazır...' });
-    const [binaryStats, setBinaryStats] = useState({ steps: 0, status: 'Hazır...' });
+    const [linearStats, setLinearStats] = useState({ steps: 0, status: dict.statusReady });
+    const [binaryStats, setBinaryStats] = useState({ steps: 0, status: dict.statusReady });
     const [isSearching, setIsSearching] = useState(false);
 
     const reset = () => {
@@ -418,11 +429,11 @@ function AlgorithmsSection() {
         if (isSearching) return;
         setIsSearching(true);
         reset();
-        setLinearStats({ steps: 0, status: 'Hazır...' });
-        setBinaryStats({ steps: 0, status: 'Bekliyor...' });
+        setLinearStats({ steps: 0, status: dict.statusReady });
+        setBinaryStats({ steps: 0, status: dict.statusWaiting });
 
         // Linear Search
-        setLinearStats(prev => ({ ...prev, status: 'Çalışıyor...' }));
+        setLinearStats(prev => ({ ...prev, status: dict.statusRunning }));
         for (let i = 0; i < dataSet.length; i++) {
             setLinearStats(prev => ({ ...prev, steps: i + 1 }));
             updateBox(i, 'check');
@@ -430,7 +441,7 @@ function AlgorithmsSection() {
 
             if (dataSet[i] === target) {
                 updateBox(i, 'found');
-                setLinearStats(prev => ({ ...prev, status: `Bulundu! Index: ${i}` }));
+                setLinearStats(prev => ({ ...prev, status: dict.statusLinearFound(i) }));
                 break;
             } else {
                 updateBox(i, 'default');
@@ -441,7 +452,7 @@ function AlgorithmsSection() {
 
         // Binary Search
         reset();
-        setBinaryStats(prev => ({ ...prev, status: 'Çalışıyor...' }));
+        setBinaryStats(prev => ({ ...prev, status: dict.statusRunning }));
 
         let low = 0;
         let high = dataSet.length - 1;
@@ -449,7 +460,7 @@ function AlgorithmsSection() {
 
         while (low <= high) {
             steps++;
-            setBinaryStats(prev => ({ steps: steps, status: 'Çalışıyor...' }));
+            setBinaryStats(prev => ({ steps: steps, status: dict.statusRunning }));
 
             let mid = Math.floor((low + high) / 2);
             let guess = dataSet[mid];
@@ -459,16 +470,16 @@ function AlgorithmsSection() {
 
             if (guess === target) {
                 updateBox(mid, 'found');
-                setBinaryStats(prev => ({ ...prev, status: 'Bulundu! Böldük, böldük ve bulduk.' }));
+                setBinaryStats(prev => ({ ...prev, status: dict.statusBinaryFound }));
                 break;
             }
 
             if (guess > target) {
-                setBinaryStats(prev => ({ ...prev, status: `${guess} büyük. Sağ tarafı atıyoruz.` }));
+                setBinaryStats(prev => ({ ...prev, status: dict.statusBinaryGreater(guess) }));
                 updateRange(mid, high, 'eliminated');
                 high = mid - 1;
             } else {
-                setBinaryStats(prev => ({ ...prev, status: `${guess} küçük. Sol tarafı atıyoruz.` }));
+                setBinaryStats(prev => ({ ...prev, status: dict.statusBinarySmaller(guess) }));
                 updateRange(low, mid, 'eliminated');
                 low = mid + 1;
             }
@@ -479,15 +490,19 @@ function AlgorithmsSection() {
 
     return (
         <div className="bg-card border border-white/10 p-6 space-y-6">
-            <h2 className="text-2xl font-bold text-foreground mb-4 border-b border-white/10 pb-2">Arama Algoritmaları Yarışı</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4 border-b border-white/10 pb-2">{dict.searchHeading}</h2>
             <p className="text-muted mb-6 leading-relaxed">
-                Sıralı bir dizide <strong>Binary Search</strong> (Parçala ve Fethet) yönteminin, <strong>Linear Search</strong> (Tek Tek Bakma) yöntemine göre ne kadar hızlı olduğunu test edin.
+                {dict.searchDescPart1}
+                <strong>{dict.searchDescStrong1}</strong>
+                {dict.searchDescPart2}
+                <strong>{dict.searchDescStrong2}</strong>
+                {dict.searchDescPart3}
             </p>
 
             {/* Controls */}
             <div className="flex flex-col md:flex-row justify-between items-end gap-4 bg-white/5 p-4 border border-white/10 rounded">
                 <div className="flex items-end gap-4">
-                    <span className="text-sm font-medium text-muted mb-2">Veri Seti (Sıralı 1-20)</span>
+                    <span className="text-sm font-medium text-muted mb-2">{dict.searchDataSetLabel}</span>
                     <div className="space-x-2">
                         <input
                             type="number"
@@ -495,14 +510,14 @@ function AlgorithmsSection() {
                             value={target}
                             onChange={(e) => setTarget(parseInt(e.target.value))}
                             className="border border-white/20 bg-black text-white px-2 py-1 w-20 text-center rounded focus:border-primary outline-none"
-                            placeholder="Hedef"
+                            placeholder={dict.searchTargetPlaceholder}
                         />
                         <button
                             onClick={startSearch}
                             disabled={isSearching}
                             className="bg-foreground text-background px-4 py-1 rounded hover:bg-gray-300 transition shadow font-bold disabled:opacity-50"
                         >
-                            {isSearching ? 'Aranıyor...' : 'Aramayı Başlat'}
+                            {isSearching ? dict.searchSearching : dict.searchStartBtn}
                         </button>
                     </div>
                 </div>
@@ -533,19 +548,19 @@ function AlgorithmsSection() {
                 })}
             </div>
             <div className="flex justify-between text-xs text-muted px-1">
-                <span>Index: 0</span>
-                <span>Index: 19</span>
+                <span>{dict.searchIndexStart}</span>
+                <span>{dict.searchIndexEnd}</span>
             </div>
 
             {/* Comparison Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Linear */}
                 <div className="border border-white/10 rounded-lg p-4 bg-white/5 relative overflow-hidden">
-                    <h4 className="font-bold text-muted mb-2 border-b border-white/10 pb-1">Linear Search (Doğrusal)</h4>
-                    <div className="text-sm text-muted min-h-[40px] font-mono">{linearStats.status}</div>
+                    <h4 className="font-bold text-muted mb-2 border-b border-white/10 pb-1">{dict.searchLinearLabel}</h4>
+                    <div className="text-sm text-muted min-h-10 font-mono">{linearStats.status}</div>
                     <div className="mt-4 flex items-center justify-between">
-                        <span className="text-xs text-muted">Karmaşıklık: O(n)</span>
-                        <span className="text-xl font-bold text-foreground">{linearStats.steps} Adım</span>
+                        <span className="text-xs text-muted">{dict.searchLinearComplexity}</span>
+                        <span className="text-xl font-bold text-foreground">{dict.searchStepsLabel(linearStats.steps)}</span>
                     </div>
                     <div className="mt-2 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-muted transition-all duration-300" style={{ width: `${(linearStats.steps / 20) * 100}%` }}></div>
@@ -554,11 +569,11 @@ function AlgorithmsSection() {
 
                 {/* Binary */}
                 <div className="border border-blue-500/30 rounded-lg p-4 bg-blue-900/10 relative overflow-hidden">
-                    <h4 className="font-bold text-blue-400 mb-2 border-b border-blue-500/30 pb-1">Binary Search (İkili)</h4>
-                    <div className="text-sm text-blue-300 min-h-[40px] font-mono">{binaryStats.status}</div>
+                    <h4 className="font-bold text-blue-400 mb-2 border-b border-blue-500/30 pb-1">{dict.searchBinaryLabel}</h4>
+                    <div className="text-sm text-blue-300 min-h-10 font-mono">{binaryStats.status}</div>
                     <div className="mt-4 flex items-center justify-between">
-                        <span className="text-xs text-blue-400/70">Karmaşıklık: O(log n)</span>
-                        <span className="text-xl font-bold text-blue-400">{binaryStats.steps} Adım</span>
+                        <span className="text-xs text-blue-400/70">{dict.searchBinaryComplexity}</span>
+                        <span className="text-xl font-bold text-blue-400">{dict.searchStepsLabel(binaryStats.steps)}</span>
                     </div>
                     <div className="mt-2 h-2 bg-blue-500/20 rounded-full overflow-hidden">
                         <div className="h-full bg-blue-500 transition-all duration-500" style={{ width: `${(binaryStats.steps / 5) * 100}%` }}></div>
@@ -567,9 +582,15 @@ function AlgorithmsSection() {
             </div>
 
             <div className="bg-white/5 border border-white/10 p-6 mt-4 rounded">
-                <h3 className="font-bold text-lg mb-2 text-foreground">Neden Binary Search Daha Hızlı?</h3>
+                <h3 className="font-bold text-lg mb-2 text-foreground">{dict.searchExplanationHeading}</h3>
                 <p className="text-sm text-muted">
-                    Binary search her adımda arama alanını <strong>yarıya indirir</strong>. 1 milyon kayıtlı bir veritabanında Linear Search en kötü durumda 1 milyon işlem yaparken, Binary Search sadece yaklaşık <strong>20 adımda</strong> sonucu bulur. Şartı: Veri <strong>sıralı</strong> olmalıdır.
+                    {dict.searchExplanationPart1}
+                    <strong>{dict.searchExplanationStrong1}</strong>
+                    {dict.searchExplanationPart2}
+                    <strong>{dict.searchExplanationStrong2}</strong>
+                    {dict.searchExplanationPart3}
+                    <strong>{dict.searchExplanationStrong3}</strong>
+                    {dict.searchExplanationPart4}
                 </p>
             </div>
         </div>
@@ -577,7 +598,7 @@ function AlgorithmsSection() {
 }
 
 // --- BÖLÜM 5: REVIEW (ÖZET & SORULAR) ---
-function ReviewSection() {
+function ReviewSection({ dict }: { dict: AlgoDict }) {
     const [openId, setOpenId] = useState<string | null>(null);
 
     const toggle = (id: string) => setOpenId(openId === id ? null : id);
@@ -585,35 +606,35 @@ function ReviewSection() {
     const questions = [
         {
             id: 'q1',
-            q: '1. 1 milyon kayıtlı veritabanında ID ile arama (O(1)) mı, İsim ile arama (O(n)) mı?',
-            a: 'ID ile arama (O(1)) çok daha verimlidir. O(n) tüm listeyi taramayı gerektirirken, O(1) veri boyutundan bağımsız olarak anında sonuç verir.'
+            q: dict.reviewQ1,
+            a: dict.reviewA1
         },
         {
             id: 'q2',
-            q: '2. Tarayıcıdaki "Geri" butonu neden bir Stack yapısıdır?',
-            a: 'Çünkü LIFO (Last In First Out) prensibiyle çalışır. En son ziyaret ettiğiniz sayfa (yığının en üstü), geri tuşuna bastığınızda ilk karşınıza gelen sayfadır.'
+            q: dict.reviewQ2,
+            a: dict.reviewA2
         },
         {
             id: 'q3',
-            q: '3. Market kasasındaki sıra neden bir Queue yapısıdır?',
-            a: 'Çünkü FIFO (First In First Out) prensibi geçerlidir. Sıraya ilk giren müşteri, kasadan ilk işlem gören ve ayrılan kişidir.'
+            q: dict.reviewQ3,
+            a: dict.reviewA3
         },
         {
             id: 'q4',
-            q: '4. Binary Search kullanmak için temel şart nedir?',
-            a: 'Veri setinin SIRALI (Sorted) olması gerekir. Karışık bir listede "hedef sayı bu ortadaki sayıdan büyük mü küçük mü" diye karar verip eleme yapamazsınız.'
+            q: dict.reviewQ4,
+            a: dict.reviewA4
         },
         {
             id: 'q5',
-            q: '5. O(n²) algoritmalar neden Big Data\'da istenmez?',
-            a: 'İşlem sayısı girdinin karesiyle artar. 1 milyon veri için 10^12 (trilyon) işlem gerekir ki bu modern bilgisayarları bile kilitler.'
+            q: dict.reviewQ5,
+            a: dict.reviewA5
         },
     ];
 
     return (
         <div className="bg-card border border-white/10 p-8 rounded-xl max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-foreground mb-6">Bilgi Kontrolü ve Özet</h2>
-            <p className="text-muted mb-8">Çalışma rehberindeki anahtar soruları gözden geçirin. Cevabı görmek için karta tıklayın.</p>
+            <h2 className="text-2xl font-bold text-foreground mb-6">{dict.reviewHeading}</h2>
+            <p className="text-muted mb-8">{dict.reviewDesc}</p>
 
             <div className="space-y-4">
                 {questions.map((item) => (

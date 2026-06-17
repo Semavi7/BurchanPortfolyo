@@ -1,17 +1,22 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { personalData } from "@/lib/data"
+import { personalDataTr, personalDataEn } from "@/lib/data"
 import { ExternalLink, Github, Layers, Server, ShoppingBag } from "lucide-react"
+import { useLanguage } from "@/i18n/LanguageContext"
+import { ui } from "@/i18n/ui"
 
 export const Projects = () => {
+    const { lang } = useLanguage()
+    const data = lang === "tr" ? personalDataTr : personalDataEn
+
     return (
         <section id="projects" className="py-24 bg-card/50">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <div>
-                        <h2 className="text-4xl font-black uppercase tracking-tighter mb-2">Seçili Projeler</h2>
-                        <p className="text-muted font-mono text-sm max-w-md">Modern mimari ve teknolojilerle inşa edilmiş çözüm odaklı uygulamalar.</p>
+                        <h2 className="text-4xl font-black uppercase tracking-tighter mb-2">{ui.selectedProjects[lang]}</h2>
+                        <p className="text-muted font-mono text-sm max-w-md">{ui.projectsSubtitle[lang]}</p>
                     </div>
                     <div className="flex items-center gap-2 font-mono text-xs text-muted">
                         <span className="w-12 h-px bg-border" />
@@ -20,7 +25,7 @@ export const Projects = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {personalData.projects.map((project, index) => (
+                    {data.projects.map((project, index) => (
                         <motion.div
                             key={index}
                             initial={{ opacity: 0, y: 20 }}
@@ -61,7 +66,7 @@ export const Projects = () => {
 
                                 <div className="pt-6 border-t border-border flex gap-4">
                                     <a href={project.repository} target="_blank" className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary hover:opacity-80 transition-opacity">
-                                        <Github size={14} /> Repository
+                                        <Github size={14} /> {ui.repository[lang]}
                                     </a>
                                 </div>
                             </div>

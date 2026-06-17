@@ -7,6 +7,8 @@ import {
   Activity, Sparkles, ShieldAlert, LayoutGrid, SearchX, CheckCircle2, 
   XCircle, Lightbulb 
 } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { mlDict } from "@/i18n/ml";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -14,218 +16,6 @@ import { twMerge } from "tailwind-merge";
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-// --- Veri Seti ---
-const mlData = [
-  {
-    id: "linear",
-    name: "Lineer Regresyon",
-    type: "Gözetimli",
-    category: "Regresyon",
-    usage: "Sürekli değer tahmini",
-    formula: "Y = b0 + b1X + …",
-    pros: ["Basit ve hızlı", "Yorumlanabilir", "Matematiksel temel"],
-    cons: ["Aykırı değerlere hassas", "Sadece doğrusal ilişkiler"],
-    example: "Ev fiyatı, Maaş tahmini",
-    icon: TrendingUp,
-    color: "blue",
-  },
-  {
-    id: "logistic",
-    name: "Lojistik Regresyon",
-    type: "Gözetimli",
-    category: "Sınıflandırma",
-    usage: "İkili (Binary) Sınıflandırma",
-    formula: "Sigmoid Fonksiyonu",
-    pros: ["Olasılık verir", "Uygulaması kolay"],
-    cons: ["Doğrusal olmayan sınırda zayıf", "Çoklu sınıf zordur"],
-    example: "Spam / Spam Değil",
-    icon: ToggleRight,
-    color: "green",
-  },
-  {
-    id: "knn",
-    name: "KNN (K-En Yakın Komşu)",
-    type: "Gözetimli",
-    category: "Sınıflandırma",
-    usage: "Benzerlik bazlı tahmin",
-    formula: "Öklid / Manhattan Mesafesi",
-    pros: ["Eğitim süresi yok (Lazy)", "Basit mantık"],
-    cons: ["Büyük veride yavaş", "Hafıza maliyeti yüksek"],
-    example: "Öneri sistemleri",
-    icon: Users,
-    color: "indigo",
-  },
-  {
-    id: "svm",
-    name: "SVM (Destek Vektör)",
-    type: "Gözetimli",
-    category: "Sınıflandırma",
-    usage: "Net ayrım gerektiren veriler",
-    formula: "Maksimum Marjin (Hyperplane)",
-    pros: ["Yüksek boyutlu veride etkili", "Sağlam (Robust)"],
-    cons: ["Büyük veri setinde yavaş", "Parametre ayarı zor"],
-    example: "Yüz tanıma, Metin kategorisi",
-    icon: Divide,
-    color: "rose",
-  },
-  {
-    id: "naivebayes",
-    name: "Naive Bayes",
-    type: "Gözetimli",
-    category: "Olasılık",
-    usage: "Metin sınıflandırma",
-    formula: "P(A|B) = P(B|A)P(A)/P(B)",
-    pros: ["Çok hızlı", "Az veriyle çalışabilir", "Metinde başarılı"],
-    cons: ["Özellikleri bağımsız varsayar", "Gerçek hayatta nadir"],
-    example: "Duygu analizi, Haber sınıflandırma",
-    icon: Percent,
-    color: "yellow",
-  },
-  {
-    id: "tree",
-    name: "Karar Ağacı (Decision Tree)",
-    type: "Gözetimli",
-    category: "Ağaç",
-    usage: "Karar destek sistemleri",
-    formula: "Entropy / Gini İndeksi",
-    pros: ["Görselleştirilebilir", "Veri hazırlığı az"],
-    cons: ["Aşırı öğrenme (Overfitting)", "Kararsız yapı"],
-    example: "Kredi onayı, Tıbbi teşhis",
-    icon: GitFork,
-    color: "emerald",
-  },
-  {
-    id: "forest",
-    name: "Rastgele Orman (RF)",
-    type: "Gözetimli",
-    category: "Ensemble",
-    usage: "Genel amaçlı yüksek doğruluk",
-    formula: "Bagging + Çoklu Ağaç",
-    pros: ["Yüksek başarı", "Overfitting'e dirençli"],
-    cons: ["Yavaş eğitim", "Yorumlaması zor (Blackbox)"],
-    example: "Müşteri kaybı (Churn), Risk analizi",
-    icon: Trees,
-    color: "teal",
-  },
-  {
-    id: "xgboost",
-    name: "Gradient Boosting (XGBoost)",
-    type: "Gözetimli",
-    category: "Ensemble",
-    usage: "Kaggle yarışmaları, Tabular veri",
-    formula: "Hata düzeltme odaklı ağaçlar",
-    pros: ["Çok yüksek performans", "Hızlı (XGBoost)"],
-    cons: ["Parametre ayarı zor", "Gürültüye hassas"],
-    example: "Arama sıralaması, Sigorta riski",
-    icon: Zap,
-    color: "orange",
-  },
-  {
-    id: "kmeans",
-    name: "K-Means",
-    type: "Gözetimsiz",
-    category: "Kümeleme",
-    usage: "Veriyi gruplara ayırma",
-    formula: "Merkezlere uzaklık minimizasyonu",
-    pros: ["Hızlı ve ölçeklenebilir", "Uygulaması basit"],
-    cons: ["K sayısını seçmek zor", "Başlangıca duyarlı"],
-    example: "Müşteri segmentasyonu",
-    icon: Group,
-    color: "purple",
-  },
-  {
-    id: "pca",
-    name: "PCA",
-    type: "Gözetimsiz",
-    category: "Boyut İndirgeme",
-    usage: "Veri görselleştirme, Sıkıştırma",
-    formula: "Varyans maksimizasyonu",
-    pros: ["Boyutu azaltır", "Gürültüyü temizler"],
-    cons: ["Veri kaybı olabilir", "Yorumlaması zorlaşır"],
-    example: "Genetik veri analizi",
-    icon: Minimize,
-    color: "gray",
-  },
-  {
-    id: "mlp",
-    name: "Yapay Sinir Ağları (MLP)",
-    type: "Gözetimli",
-    category: "Derin Öğrenme",
-    usage: "Karmaşık, doğrusal olmayan veri",
-    formula: "Ağırlık * Girdi + Bias",
-    pros: ["Evrensel öğrenici", "Yüksek kapasite"],
-    cons: ["Çok veri ister", "Kara kutu (Anlaşılamaz)"],
-    example: "El yazısı tanıma",
-    icon: Brain,
-    color: "pink",
-  },
-  {
-    id: "cnn",
-    name: "CNN (Konvolüsyonel)",
-    type: "Gözetimli",
-    category: "Derin Öğrenme",
-    usage: "Görüntü ve Video işleme",
-    formula: "Konvolüsyon + Havuzlama",
-    pros: ["Görüntüde SOTA", "Özellik çıkarımı otomatik"],
-    cons: ["Yüksek donanım (GPU)", "Eğitim süresi"],
-    example: "Otonom araç, MR analizi",
-    icon: ImageIcon,
-    color: "cyan",
-  },
-  {
-    id: "rnn",
-    name: "RNN / LSTM",
-    type: "Gözetimli",
-    category: "Derin Öğrenme",
-    usage: "Zaman serisi, Metin",
-    formula: "Hafıza hücreleri",
-    pros: ["Sıralı veriyi anlar", "Bağlamı korur"],
-    cons: ["Unutkanlık sorunu", "Eğitimi yavaş"],
-    example: "Borsa tahmini, Çeviri",
-    icon: Activity,
-    color: "sky",
-  },
-  {
-    id: "transformer",
-    name: "Transformer (BERT/GPT)",
-    type: "Gözetimli",
-    category: "Derin Öğrenme",
-    usage: "NLP, Gen AI",
-    formula: "Self-Attention (Dikkat)",
-    pros: ["Paralel işleme", "Sonsuz bağlam (teorik)"],
-    cons: ["Muazzam maliyet", "Devasa veri ihtiyacı"],
-    example: "ChatGPT, Gemini, Asistanlar",
-    icon: Sparkles,
-    color: "fuchsia",
-  },
-  {
-    id: "autoencoder",
-    name: "Autoencoders",
-    type: "Gözetimsiz",
-    category: "Derin Öğrenme",
-    usage: "Anomali tespiti",
-    formula: "Encoder -> Latent -> Decoder",
-    pros: ["Etiketsiz öğrenme", "Gürültü silme"],
-    cons: ["Kayıplı çıktı", "Eğitim dengesi zor"],
-    example: "Siber saldırı tespiti",
-    icon: ShieldAlert,
-    color: "red",
-  },
-  {
-    id: "hierarchical",
-    name: "Hiyerarşik Kümeleme",
-    type: "Gözetimsiz",
-    category: "Kümeleme",
-    usage: "Hiyerarşi gerektiren gruplar",
-    formula: "Dendrogram yapısı",
-    pros: ["K değerine gerek yok", "Görselleştirilebilir"],
-    cons: ["Bellek ve işlem gücü yoğun"],
-    example: "Genetik taksonomi",
-    icon: LayoutGrid,
-    color: "amber",
-  },
-];
 
 // --- Stil Haritası ---
 const colorMap: Record<string, { border: string; text: string; bg: string; shadow: string; glowBorder: string }> = {
@@ -249,18 +39,20 @@ const colorMap: Record<string, { border: string; text: string; bg: string; shado
 
 export default function MachineLearningGuide() {
   const [searchQuery, setSearchQuery] = useState("");
+  const { lang } = useLanguage();
+  const dict = mlDict[lang];
 
   // Arama filtreleme mantığı
   const filteredData = useMemo(() => {
     const lowerQuery = searchQuery.toLowerCase();
-    return mlData.filter(
+    return dict.algorithms.filter(
       (item) =>
         item.name.toLowerCase().includes(lowerQuery) ||
         item.usage.toLowerCase().includes(lowerQuery) ||
         item.example.toLowerCase().includes(lowerQuery) ||
         item.category.toLowerCase().includes(lowerQuery)
     );
-  }, [searchQuery]);
+  }, [searchQuery, dict]);
 
   return (
     <div className="min-h-screen text-slate-100 font-sans p-2 md:p-8"
@@ -269,17 +61,17 @@ export default function MachineLearningGuide() {
         backgroundImage: "radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 70%)"
       }}
     >
-      <div className="max-w-[1600px] mx-auto space-y-8">
+      <div className="max-w-400 mx-auto space-y-8">
         
         {/* --- Header --- */}
         <div className="sticky top-4 z-50 p-6 rounded-2xl border border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 shadow-2xl backdrop-blur-md bg-[#0f172a]/60">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-3">
+            <h1 className="text-3xl font-bold bg-linear-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-3">
               <Cpu className="text-blue-400 w-8 h-8" />
-              ML Algoritmaları
+              {dict.pageTitle}
             </h1>
             <p className="text-slate-400 mt-1 text-sm font-light tracking-wide">
-              Veri Bilimi ve Yapay Zeka için Kapsamlı Başucu Rehberi
+              {dict.pageSubtitle}
             </p>
           </div>
 
@@ -289,7 +81,7 @@ export default function MachineLearningGuide() {
             </div>
             <input
               type="text"
-              placeholder="Algoritma, kullanım veya örnek ara..."
+              placeholder={dict.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="block w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-inner"
@@ -306,13 +98,13 @@ export default function MachineLearningGuide() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#020617] text-slate-400 uppercase tracking-wider text-xs border-b border-slate-800">
-                  <th className="p-5 font-bold w-[18%]">Algoritma</th>
-                  <th className="p-5 font-bold w-[10%]">Tür</th>
-                  <th className="p-5 font-bold w-[15%]">En İyi Kullanım</th>
-                  <th className="p-5 font-bold w-[15%]">Mantık / Formül</th>
-                  <th className="p-5 font-bold w-[15%]">Artıları (+)</th>
-                  <th className="p-5 font-bold w-[15%]">Eksileri (-)</th>
-                  <th className="p-5 font-bold w-[12%]">Gerçek Örnek</th>
+                  <th className="p-5 font-bold w-[18%]">{dict.tableHeaders[0]}</th>
+                  <th className="p-5 font-bold w-[10%]">{dict.tableHeaders[1]}</th>
+                  <th className="p-5 font-bold w-[15%]">{dict.tableHeaders[2]}</th>
+                  <th className="p-5 font-bold w-[15%]">{dict.tableHeaders[3]}</th>
+                  <th className="p-5 font-bold w-[15%]">{dict.tableHeaders[4]}</th>
+                  <th className="p-5 font-bold w-[15%]">{dict.tableHeaders[5]}</th>
+                  <th className="p-5 font-bold w-[12%]">{dict.tableHeaders[6]}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800 text-sm">
@@ -323,7 +115,7 @@ export default function MachineLearningGuide() {
                     <tr 
                       key={item.id} 
                       className={cn(
-                        "group transition-all duration-200 bg-slate-900/40 mb-2 border-b border-slate-800/50 hover:bg-white/[0.03]",
+                        "group transition-all duration-200 bg-slate-900/40 mb-2 border-b border-slate-800/50 hover:bg-white/3",
                         theme.shadow && `hover:shadow-[0_0_15px_rgba(var(--shadow-color))]`, 
                         theme.glowBorder && `border-l-[3px] ${theme.glowBorder}`
                       )}
@@ -349,7 +141,7 @@ export default function MachineLearningGuide() {
                       </td>
                       <td className="p-5 text-slate-300 text-sm leading-relaxed">{item.usage}</td>
                       <td className="p-5">
-                        <code className="px-2 py-1 rounded bg-[#020617] border border-slate-800 text-xs font-mono text-slate-400 block w-fit truncate max-w-[140px]" title={item.formula}>
+                        <code className="px-2 py-1 rounded bg-[#020617] border border-slate-800 text-xs font-mono text-slate-400 block w-fit truncate max-w-35" title={item.formula}>
                           {item.formula}
                         </code>
                       </td>
@@ -424,22 +216,22 @@ export default function MachineLearningGuide() {
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="col-span-2 bg-slate-900/50 p-2 rounded border border-slate-800">
-                    <span className="text-slate-500 block mb-1">Kullanım:</span>
+                    <span className="text-slate-500 block mb-1">{dict.mobileLabels.usage}</span>
                     <span className="text-slate-300">{item.usage}</span>
                   </div>
                   <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
-                    <span className="text-slate-500 block mb-1">Mantık:</span>
+                    <span className="text-slate-500 block mb-1">{dict.mobileLabels.logic}</span>
                     <code className="text-slate-400 font-mono text-[10px]">{item.formula}</code>
                   </div>
                   <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
-                    <span className="text-slate-500 block mb-1">Örnek:</span>
+                    <span className="text-slate-500 block mb-1">{dict.mobileLabels.example}</span>
                     <span className="text-slate-300 italic">{item.example}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
                   <div>
-                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1 block">Artılar</span>
+                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1 block">{dict.mobileLabels.pros}</span>
                     <ul className="space-y-1">
                       {item.pros.map((p, idx) => (
                         <li key={idx} className="text-[10px] text-slate-400 flex items-start gap-1">
@@ -450,7 +242,7 @@ export default function MachineLearningGuide() {
                     </ul>
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-1 block">Eksiler</span>
+                    <span className="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-1 block">{dict.mobileLabels.cons}</span>
                     <ul className="space-y-1">
                       {item.cons.map((c, idx) => (
                         <li key={idx} className="text-[10px] text-slate-400 flex items-start gap-1">
@@ -470,7 +262,7 @@ export default function MachineLearningGuide() {
         {filteredData.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-slate-500 bg-[#0f172a] rounded-2xl border border-slate-800 border-dashed">
             <SearchX className="w-12 h-12 mb-3 opacity-50" />
-            <p className="text-lg">Eşleşen algoritma bulunamadı.</p>
+            <p className="text-lg">{dict.noResults}</p>
           </div>
         )}
 

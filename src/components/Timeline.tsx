@@ -1,10 +1,15 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { personalData } from "@/lib/data"
+import { personalDataTr, personalDataEn } from "@/lib/data"
 import { Briefcase, GraduationCap, Calendar } from "lucide-react"
+import { useLanguage } from "@/i18n/LanguageContext"
+import { ui } from "@/i18n/ui"
 
 export const Timeline = () => {
+    const { lang } = useLanguage()
+    const data = lang === "tr" ? personalDataTr : personalDataEn
+
     return (
         <section id="experience" className="py-24">
             <div className="container mx-auto px-4">
@@ -15,11 +20,11 @@ export const Timeline = () => {
                             <div className="p-3 bg-primary/10 border border-primary/20">
                                 <Briefcase className="text-primary" />
                             </div>
-                            <h2 className="text-3xl font-black uppercase tracking-tighter">İş Deneyimi</h2>
+                            <h2 className="text-3xl font-black uppercase tracking-tighter">{ui.workExperience[lang]}</h2>
                         </div>
 
                         <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-4.75 before:w-px before:bg-border">
-                            {personalData.experience.map((exp, index) => (
+                            {data.experience.map((exp, index) => (
                                 <motion.div
                                     key={index}
                                     initial={{ opacity: 0, x: -20 }}
@@ -50,11 +55,11 @@ export const Timeline = () => {
                             <div className="p-3 bg-secondary/10 border border-secondary/20">
                                 <GraduationCap className="text-secondary" />
                             </div>
-                            <h2 className="text-3xl font-black uppercase tracking-tighter">Eğitim</h2>
+                            <h2 className="text-3xl font-black uppercase tracking-tighter">{ui.education[lang]}</h2>
                         </div>
 
                         <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-4.75 before:w-px before:bg-border">
-                            {personalData.education.map((edu, index) => (
+                            {data.education.map((edu, index) => (
                                 <motion.div
                                     key={index}
                                     initial={{ opacity: 0, x: 20 }}

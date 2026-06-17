@@ -1,7 +1,7 @@
 // src/lib/github.ts
 
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || "semavi7"; // .env'den alır yoksa bunu kullanır
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Varsa private repoları da çeker
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Private repolar için ZORUNLU
 
 export async function fetchGithubRepos() {
   console.log(`🌐 GitHub'dan ${GITHUB_USERNAME} kullanıcısının projeleri çekiliyor...`);
@@ -11,16 +11,20 @@ export async function fetchGithubRepos() {
       "Accept": "application/vnd.github.v3+json",
     };
 
-    // Eğer token varsa ekle (Rate limit yememek için iyi olur)
-    if (GITHUB_TOKEN) {
+    // Private repolar için token ZORUNLU
+    if (!GITHUB_TOKEN) {
+      console.warn("⚠️ GITHUB_TOKEN bulunamadı. Sadece public repolar çekilecek.");
+    } else {
       headers["Authorization"] = `token ${GITHUB_TOKEN}`;
     }
 
-    // Repoları çek (maksimum 100 tane, son güncellenenler)
-    const response = await fetch(
-      `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`, 
-      { headers }
-    );
+    // /user/repos endpoint'i token varsa public + private tüm repoları çeker
+    // /users/:username/repos sadece public repoları döner
+    const endpoint = GITHUB_TOKEN
+      ? `https://api.github.com/user/repos?sort=updated&per_page=100&type=owner`
+      : `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`;
+
+    const response = await fetch(endpoint, { headers });
 
     if (!response.ok) {
       throw new Error(`GitHub API Hatası: ${response.statusText}`);

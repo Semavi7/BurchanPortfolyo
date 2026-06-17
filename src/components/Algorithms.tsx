@@ -3,8 +3,12 @@
 import { motion } from "framer-motion";
 import { Binary, Layers } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { ui } from "@/i18n/ui";
 
 export const Algorithms = () => {
+  const { lang } = useLanguage();
+
   return (
     <section className="container mx-auto px-4 py-20">
       <motion.div
@@ -18,20 +22,20 @@ export const Algorithms = () => {
           <div className="space-y-4 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono">
               <Binary className="w-3 h-3" />
-              <span>Interactive Lab</span>
+              <span>{ui.algoBadge[lang]}</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Algoritma ve Veri Yapıları
+              {ui.algoTitle[lang]}
             </h2>
             <p className="text-slate-400 text-lg">
-              Yazılımın temellerini sağlamlaştırın. Big O analizi, veri yapıları (Stack, Queue) ve arama algoritmalarını interaktif simülasyonlarla deneyimleyin.
+              {ui.algoDesc[lang]}
             </p>
           </div>
           <Link
             href="/algorithms"
             className="shrink-0 px-8 py-4 bg-primary hover:bg-primary/90 text-white rounded-xl font-semibold transition-all shadow-lg shadow-emerald-900/20 flex items-center gap-2 group"
           >
-            Simülasyonu Başlat
+            {ui.algoBtn[lang]}
             <Layers className="w-5 h-5 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
