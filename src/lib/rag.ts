@@ -31,7 +31,7 @@ export async function getVectorStore() {
 
   console.log("📂 Veritabanı bulunamadı. PDF okunuyor ve oluşturuluyor...");
 
-  const pdfPath = path.join(process.cwd(), "cv.pdf");
+  const pdfPath = path.join(process.cwd(), "public", "cv.pdf");
   if (!fs.existsSync(pdfPath)) {
     throw new Error("CV.pdf dosyası kök dizinde bulunamadı!");
   }
