@@ -32,7 +32,7 @@ export const Hero = () => {
                         </div>
 
                         {/* DUZELTME 1: Font boyutlari mobile gore ayarlandi (text-4xl -> lg:text-8xl) */}
-                        <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black mb-6 leading-tight lg:leading-none uppercase tracking-tighter">
+                        <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black mb-6 leading-tight lg:leading-none uppercase tracking-normal">
                             {data.name.split(' ').map((word, i) => (
                                 <span key={i} className={i === 2 ? "text-primary" : ""}>
                                     {word}

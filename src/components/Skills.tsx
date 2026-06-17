@@ -13,7 +13,7 @@ export const Skills = () => {
     return (
         <section id="skills" className="py-24 border-b border-border">
             <div className="container mx-auto px-4">
-                <h2 className="text-4xl font-black uppercase tracking-tighter mb-16 border-l-4 border-primary pl-6">
+                <h2 className="text-4xl font-black uppercase tracking-normal mb-16 border-l-4 border-primary pl-6">
                     {ui.technicalSkills[lang]}
                 </h2>
 

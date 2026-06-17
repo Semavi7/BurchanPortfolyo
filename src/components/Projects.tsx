@@ -15,7 +15,7 @@ export const Projects = () => {
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <div>
-                        <h2 className="text-4xl font-black uppercase tracking-tighter mb-2">{ui.selectedProjects[lang]}</h2>
+                        <h2 className="text-4xl font-black uppercase tracking-normal mb-2">{ui.selectedProjects[lang]}</h2>
                         <p className="text-muted font-mono text-sm max-w-md">{ui.projectsSubtitle[lang]}</p>
                     </div>
                     <div className="flex items-center gap-2 font-mono text-xs text-muted">

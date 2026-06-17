@@ -15,7 +15,7 @@ export const Certifications = () => {
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <Award className="mx-auto mb-4 text-accent" size={40} />
-                    <h2 className="text-4xl font-black uppercase tracking-tighter">{ui.certifications[lang]}</h2>
+                    <h2 className="text-4xl font-black uppercase tracking-normal">{ui.certifications[lang]}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

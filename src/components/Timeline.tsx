@@ -20,7 +20,7 @@ export const Timeline = () => {
                             <div className="p-3 bg-primary/10 border border-primary/20">
                                 <Briefcase className="text-primary" />
                             </div>
-                            <h2 className="text-3xl font-black uppercase tracking-tighter">{ui.workExperience[lang]}</h2>
+                            <h2 className="text-3xl font-black uppercase tracking-normal">{ui.workExperience[lang]}</h2>
                         </div>
 
                         <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-4.75 before:w-px before:bg-border">
@@ -55,7 +55,7 @@ export const Timeline = () => {
                             <div className="p-3 bg-secondary/10 border border-secondary/20">
                                 <GraduationCap className="text-secondary" />
                             </div>
-                            <h2 className="text-3xl font-black uppercase tracking-tighter">{ui.education[lang]}</h2>
+                            <h2 className="text-3xl font-black uppercase tracking-normal">{ui.education[lang]}</h2>
                         </div>
 
                         <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-4.75 before:w-px before:bg-border">
