@@ -36,8 +36,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-# lancedb (local vector store, Vercel'de /tmp kullaniliyor)
-.lancedb
 
 # typescript
 *.tsbuildinfo

@@ -8,11 +8,8 @@ import { fetchGithubRepos } from "./github";
 import { Document as LCDocument } from "@langchain/core/documents";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 
-// Vercel serverless ortaminda process.cwd() read-only'dir.
-// /tmp dizini yazilabilir (max 512MB).
-const LANCE_DB_PATH = process.env.VERCEL
-  ? "/tmp/.lancedb"
-  : path.join(process.cwd(), ".lancedb");
+
+const LANCE_DB_PATH = path.join(process.cwd(), ".lancedb");
 
 export async function getVectorStore() {
   

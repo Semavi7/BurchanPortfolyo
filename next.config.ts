@@ -16,7 +16,10 @@ const nextConfig: NextConfig = {
 
   // cv.pdf'in Vercel serverless function bundle'ina dahil edilmesini sagla
   outputFileTracingIncludes: {
-    '*': ['./cv.pdf'],
+    '*': [
+      './cv.pdf', 
+      './.lancedb/**/*' // Bunu ekledik!
+    ],
   },
 
   webpack: (config) => {
