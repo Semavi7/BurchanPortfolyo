@@ -39,7 +39,7 @@ export const services: ServiceDefinition[] = [
     descriptionEn:
       "A four-page user interface comprising front-end, back-end and database components, and the admin panel that manages it.",
     priceUsdt: 400,
-    depositPercent: 200,
+    depositPercent: 50,
   },
   {
     id: "fullstack-pro",
@@ -51,7 +51,7 @@ export const services: ServiceDefinition[] = [
     descriptionEn:
       "A ten-page user interface comprising front-end, back-end and database components, and the admin panel that manages it.",
     priceUsdt: 1000,
-    depositPercent: 500,
+    depositPercent: 50,
   },
   {
     id: "mobil-standart",
@@ -63,7 +63,7 @@ export const services: ServiceDefinition[] = [
     descriptionEn:
       "A four-screens user interface comprising front-end, back-end and database components, and the admin panel that manages it.",
     priceUsdt: 400,
-    depositPercent: 200,
+    depositPercent: 50,
   },
   {
     id: "mobil-pro",
@@ -75,7 +75,7 @@ export const services: ServiceDefinition[] = [
     descriptionEn:
       "A four-screens user interface comprising front-end, back-end and database components, and the admin panel that manages it.",
     priceUsdt: 1000,
-    depositPercent: 500,
+    depositPercent: 50,
   },
   {
     id: "consulting",
