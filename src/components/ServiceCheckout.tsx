@@ -7,7 +7,9 @@ import { EvmNetworkKey, evmNetworks } from "@/lib/evm-payment";
 import {
   connectWallet,
   ensureNetwork,
+  isMobile,
   isMetaMaskAvailable,
+  openMetaMaskDeepLink,
   sendUsdtPayment,
 } from "@/lib/metamask";
 import { paymentConfig } from "@/lib/payment-config";
@@ -300,14 +302,24 @@ const ServiceCheckout = ({
           </div>
 
           {!isMetaMaskAvailable() ? (
-            <a
-              href="https://metamask.io/download/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-4 border border-border font-mono text-xs uppercase tracking-wide hover:border-primary transition-colors"
-            >
-              {t.installMetamask} <ExternalLink size={14} />
-            </a>
+            isMobile() ? (
+              <button
+                onClick={openMetaMaskDeepLink}
+                className="flex items-center justify-center gap-2 w-full py-4 bg-primary text-background font-bold uppercase tracking-wide hover:opacity-90 transition-opacity"
+              >
+                <Wallet size={18} />
+                {t.openInMetamask}
+              </button>
+            ) : (
+              <a
+                href="https://metamask.io/download/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-4 border border-border font-mono text-xs uppercase tracking-wide hover:border-primary transition-colors"
+              >
+                {t.installMetamask} <ExternalLink size={14} />
+              </a>
+            )
           ) : (
             <button
               onClick={handleMetaMaskPay}

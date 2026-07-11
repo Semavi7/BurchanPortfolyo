@@ -18,8 +18,26 @@ declare global {
   }
 }
 
+export const isMobile = (): boolean => {
+  if (typeof navigator === "undefined") return false;
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+    navigator.userAgent,
+  );
+};
+
 export const isMetaMaskAvailable = (): boolean => {
   return typeof window !== "undefined" && Boolean(window.ethereum);
+};
+
+/**
+ * Mobil cihazlarda MetaMask uygulamasini acar ve
+ * mevcut sayfayi MetaMask in-app browser'inda yukler.
+ * Boylece window.ethereum kullanilabilir hale gelir.
+ */
+export const openMetaMaskDeepLink = (): void => {
+  const host = window.location.host;
+  const path = window.location.pathname + window.location.search;
+  window.location.href = `https://metamask.app.link/dapp/${host}${path}`;
 };
 
 export const connectWallet = async (): Promise<string> => {
