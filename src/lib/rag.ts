@@ -103,6 +103,17 @@ export async function getVectorStore() {
     };
   });
   // -------------------------------------
+  // Embedding API'sinin çalıştığını doğrula
+  try {
+    const testEmbed = await embeddings.embedQuery("test");
+    if (!testEmbed || testEmbed.length === 0 || testEmbed.some(v => isNaN(v))) {
+      throw new Error("Embedding API geçersiz vektör döndü. GOOGLE_API_KEY'i kontrol edin.");
+    }
+    console.log(`🔑 Embedding boyutu: ${testEmbed.length}`);
+  } catch (embedErr: any) {
+    console.error("❌ Embedding API hatası:", embedErr.message);
+    throw new Error(`Embedding oluşturulamadı: ${embedErr.message}. Lütfen GOOGLE_API_KEY'in geçerli olduğundan emin olun.`);
+  }
 
   const vectorStore = await LanceDB.fromDocuments(cleanDocs, embeddings, {
     uri: LANCE_DB_PATH,

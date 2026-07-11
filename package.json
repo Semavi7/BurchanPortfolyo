@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@lancedb/lancedb": "^0.23.0",
+    "@lancedb/lancedb": "0.19.1",
     "@langchain/community": "^1.1.7",
     "@langchain/core": "^1.1.17",
     "@langchain/google-genai": "^2.1.17",
@@ -24,6 +24,7 @@
     "openai": "^6.16.0",
     "pdf-parse": "^1.1.4",
     "pdf2json": "^4.0.2",
+    "qrcode.react": "^4.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0"

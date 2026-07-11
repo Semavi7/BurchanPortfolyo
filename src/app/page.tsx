@@ -9,6 +9,7 @@ import { MachineLearning } from "@/components/MachineLearning";
 import { Algorithms } from "@/components/Algorithms";
 import { GoLang } from "@/components/GoLang";
 import { RustLang } from "@/components/RustLang";
+import Services from "@/components/Services";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Projects />
+      <Services />
       <MachineLearning />
       <Algorithms />
       <GoLang />
